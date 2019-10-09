@@ -82,23 +82,35 @@ class Graph:
                 # Goto top of loop
         
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, visited=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         This should be done using recursion.
         """
 
-        visited = set()
+        # visited = set()
 
-        def inner(starting_vertex):
-            visited.add(starting_vertex)
-            print(starting_vertex)
-            for i in self.vertices[starting_vertex]:
-                if i not in visited:
-                    inner(i)
+        # def inner(starting_vertex):
+        #     visited.add(starting_vertex)
+        #     print(starting_vertex)
+        #     for i in self.vertices[starting_vertex]:
+        #         if i not in visited:
+        #             inner(i)
 
-        inner(starting_vertex)
+        # inner(starting_vertex)
+
+
+        ####### from class #########
+        if visited is None:
+            visited = set()
+
+        print(starting_vertex)
+        visited.add(starting_vertex)
+
+        for child_vertex in self.vertices[starting_vertex]:
+            if child_vertex not in visited:
+                self.dft_recursive(child_vertex, visited)
 
         
     def bfs(self, starting_vertex, destination_vertex):
@@ -107,34 +119,55 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        # Create a queue
+        # # Create a queue
+        # qq = Queue()
+        # # Create list of visited nodes
+        # visited = set()
+        # # Put starting node in the queue
+        # qq.enqueue([starting_vertex])
+        # # While: queue not empty
+        # while qq.size() > 0:
+        #     # Pop first node out of queue
+        #     path = qq.dequeue()
+        #     # get the last vertex
+        #     vertex = path[-1]
+        #     # if vertex is equal destination
+        #     if vertex is destination_vertex:
+        #         #return path
+        #         return path
+        #     # If not visited
+        #     if vertex not in visited:
+        #         # Mark as visited
+        #         visited.add(vertex)
+        #         # get adjacent
+        #         for next_vert in self.vertices[vertex]:
+        #             # make a copy of path
+        #             new_path = list(path)
+        #             # append adjacent to the back of it
+        #             new_path.append(next_vert)
+        #             # ENQ new_path
+        #             qq.enqueue(new_path)
+
+
+        ####### from class #########
+
         qq = Queue()
-        # Create list of visited nodes
         visited = set()
-        # Put starting node in the queue
         qq.enqueue([starting_vertex])
-        # While: queue not empty
         while qq.size() > 0:
-            # Pop first node out of queue
             path = qq.dequeue()
-            # get the last vertex
             vertex = path[-1]
-            # if vertex is equal destination
-            if vertex is destination_vertex:
-                #return path
-                return path
-            # If not visited
             if vertex not in visited:
-                # Mark as visited
+                # Here is the point to do what we're trying to accomplish.
+                if vertex == destination_vertex:
+                    return path
                 visited.add(vertex)
-                # get adjacent
-                for next_vert in self.vertices[vertex]:
-                    # make a copy of path
+                for next_vertex in self.vertices[vertex]:
                     new_path = list(path)
-                    # append adjacent to the back of it
-                    new_path.append(next_vert)
-                    # ENQ new_path
+                    new_path.append(next_vertex)
                     qq.enqueue(new_path)
+        #TODO: handle when destination not found
+           
 
 
     def dfs(self, starting_vertex, destination_vertex):
@@ -143,34 +176,52 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        # Make a stack
+        # # Make a stack
+        # stack = Stack()
+        # # Make visited list
+        # visited = set()
+        # # Add first node to stack
+        # stack.push([starting_vertex])
+        # # While stack not empty:
+        # while stack.size() > 0:
+        #     # Pop top item
+        #     path = stack.pop() # make sure to pop first before it gets buried and the wrong thing gets popped
+        #     # get the last vertex
+        #     vertex = path[-1]
+        #     # If not visited
+        #     if vertex not in visited:
+        #         # if vertex is equal destination
+        #         if vertex is destination_vertex:
+        #             #return path
+        #             return path
+        #         # Mark as visited
+        #         visited.add(vertex)
+        #         # get adjacent
+        #         for next_vert in self.vertices[vertex]:
+        #             # make a copy of path
+        #             new_path = list(path)
+        #             # append adjacent to the back of it
+        #             new_path.append(next_vert)
+        #             # push new_path
+        #             stack.push(new_path)
+
+        ####### from class #########
         stack = Stack()
-        # Make visited list
         visited = set()
-        # Add first node to stack
         stack.push([starting_vertex])
-        # While stack not empty:
         while stack.size() > 0:
-            # Pop top item
-            path = stack.pop() # make sure to pop first before it gets buried and the wrong thing gets popped
-            # get the last vertex
+            path = stack.pop()
             vertex = path[-1]
-            # If not visited
             if vertex not in visited:
-                # if vertex is equal destination
-                if vertex is destination_vertex:
-                    #return path
+                # Here is the point to do what we're trying to accomplish.
+                if vertex == destination_vertex:
                     return path
-                # Mark as visited
                 visited.add(vertex)
-                # get adjacent
-                for next_vert in self.vertices[vertex]:
-                    # make a copy of path
+                for next_vertex in self.vertices[vertex]:
                     new_path = list(path)
-                    # append adjacent to the back of it
-                    new_path.append(next_vert)
-                    # push new_path
+                    new_path.append(next_vertex)
                     stack.push(new_path)
+        #TODO: handle when destination not found
 
 
 
@@ -201,6 +252,7 @@ if __name__ == '__main__':
     Should print:
         {1: {2}, 2: {3, 4}, 3: {5}, 4: {6, 7}, 5: {3}, 6: {3}, 7: {1, 6}}
     '''
+    print("\ngraph.vertices")
     print(graph.vertices)
 
     '''
@@ -210,7 +262,7 @@ if __name__ == '__main__':
         1, 2, 4, 7, 6, 3, 5
         1, 2, 4, 6, 3, 5, 7
     '''
-    print("starting DFT")
+    print("\nstarting DFT")
     graph.dft(1)
 
     '''
@@ -228,7 +280,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 6, 5
         1, 2, 4, 3, 7, 5, 6
     '''
-    print("starting BFT")
+    print("\nstarting BFT")
     graph.bft(1)
 
     '''
@@ -238,14 +290,14 @@ if __name__ == '__main__':
         1, 2, 4, 7, 6, 3, 5
         1, 2, 4, 6, 3, 5, 7
     '''
-    print("starting BFT_RECURSIVE")
+    print("\nstarting BFT_RECURSIVE")
     graph.dft_recursive(1)
 
     '''
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    print("starting BFS")
+    print("\nstarting BFS")
     print(graph.bfs(1, 6))
 
     '''
@@ -253,5 +305,5 @@ if __name__ == '__main__':
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    print("starting DFS")
+    print("\nstarting DFS")
     print(graph.dfs(1, 6))
